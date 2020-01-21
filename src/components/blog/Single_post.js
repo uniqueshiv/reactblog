@@ -14,6 +14,21 @@ const Single_post = props => {
   //       console.log("post = ", post);
   //     });
   // }, []);
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    // component mount
+    console.log("adsasdasd");
+    setCount(count + 1);
+    return () => {
+      // component unmount
+    };
+  }, []);
+
+  useEffect(() => {
+    // if value of count changes
+    console.log(count);
+    // setCount(count + 1);
+  }, [count]);
 
   return (
     <div>
