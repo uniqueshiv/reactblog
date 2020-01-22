@@ -14,6 +14,7 @@ export default class Users extends Component {
   };
 
   HttpRequestWithPage = async page_number => {
+    this.setState({ loading: false });
     axios.get(`https://reqres.in/api/users?page=${page_number}`).then(res => {
       this.setState({
         users: res.data.data,
@@ -21,6 +22,7 @@ export default class Users extends Component {
         total: res.data.total,
         per_page: res.data.per_page
       });
+      this.setState({ loading: true });
       console.log("state = ", this.state);
     });
   };
@@ -36,11 +38,35 @@ export default class Users extends Component {
   //     });
   //   }
 
-  componentDidMount() {
-    this.HttpRequestWithPage(1);
-    console.log("component did mount function");
+  componentWillMount() {
+    console.log("******************componentwillmount*********************");
   }
 
+  componentDidMount() {
+    this.HttpRequestWithPage(1);
+    console.log(
+      "****************************component did mount function*******************"
+    );
+  }
+
+  componentWillReceiveProps() {
+    console.log(
+      "******************componentwillreceiveProps *************************"
+    );
+  }
+  componentWillUpdate() {
+    console.log(
+      "****************************componentwillupdate ****************"
+    );
+  }
+
+  componentDidUpdate() {
+    console.log("****************componentDidUpdate ***********************");
+  }
+
+  componentWillUnmount() {
+    console.log("**********************componentwillunmount****************");
+  }
   render() {
     let users;
 
@@ -76,7 +102,7 @@ export default class Users extends Component {
         //   per_page={this.state.per_page}
         //   total={this.state.total}
         // />
-        <li className="collection-item avatar">
+        <li className="collection-item avatar" key={user.id}>
           <img src={user.avatar} alt="" className="circle" />
           <span className="title">{user.first_name}</span>
           <p>{user.email}</p>
@@ -88,11 +114,15 @@ export default class Users extends Component {
     } else {
       return <Loading />;
     }
-    return (
-      <div>
-        <ul className="collection">{users}</ul>
-        <ul class="pagination">{renderPageNumbers}</ul>
-      </div>
-    );
+    if (this.state.loading) {
+      return (
+        <div>
+          <ul className="collection">{users}</ul>
+          <ul className="pagination">{renderPageNumbers}</ul>
+        </div>
+      );
+    } else {
+      return <Loading />;
+    }
   }
 }
